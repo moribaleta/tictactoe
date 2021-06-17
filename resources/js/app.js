@@ -2,17 +2,27 @@ const app = new Vue({
     el: "#app",
     data: {
         table   : [],
+        table_size: {
+          row: 3,
+          col: 3
+        },
+
         player  : 1,
         winner  : null
     },
     methods: {
         
         onStart() {
-            this.table = [
-                [0,0,0],
-                [0,0,0],
-                [0,0,0]
-            ]
+            this.table = []
+
+            for(var i = 0;i<this.table_size.row;i++){
+              var row = []
+              for(var j = 0;j<this.table_size.col;j++){
+                row.push(0)
+              }
+             this.table.push(row)
+            }
+            
             this.winner = null
             this.player = 1
         },//onStart
@@ -53,8 +63,9 @@ const app = new Vue({
 
         checker() {
             const checker_value = this.player // 1, 2
-            const check_1 = 3
-            const check_2 = 6
+            const check_1       = 3//1 * this.table_size.col
+            const check_2       = 6//2 * this.table_size.col
+            
             const table = this.table
     
             for (var i = 0; i < table.length; i++) {
