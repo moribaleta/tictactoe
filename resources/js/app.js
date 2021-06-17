@@ -15,11 +15,11 @@ const app = new Vue({
             ]
             this.winner = null
             this.player = 1
-        },
+        },//onStart
 
         onFinish(){
             alert("Winner: player "+ this.winner)
-        },
+        },//onFinish
 
         onSelect(row, col){
 
@@ -37,18 +37,19 @@ const app = new Vue({
 
             this.table = [...table]
 
+            let result = this.checker()
+
             if (this.player == 1) {
                 this.player = 2
             } else {
                 this.player = 1
             }
 
-            let result = this.checker()
             if (result > 0) {
                 this.winner = result
                 this.onFinish()
             } 
-        },
+        },//onSelect
 
         checker() {
             const checker_value = this.player // 1, 2
@@ -81,11 +82,12 @@ const app = new Vue({
             }
     
             var sum = 0
-    
+
+            //diagonal left - right
             for (var i = 0; i < table.length; i++) {
                 let value = table[i][i]
                 if (value == checker_value) {
-                    sum += table[i][j]
+                    sum += value
                 }
             }
     
@@ -99,10 +101,14 @@ const app = new Vue({
     
             sum = 0
     
+            //diagnonal right to left
             for (var i = 0, j = table.length - 1; i < table.length, j >= 0; i++, j--) {
-                let value = table[i][i]
+
+                let value = table[i][j]
+                console.log("diagonals: i:"+i+", j:"+j +" value="+value)
+                
                 if (value == checker_value) {
-                    sum += table[i][j]
+                    sum += value
                 }
             }
     
@@ -114,8 +120,52 @@ const app = new Vue({
                 return 2
             }
 
-            return 0
+          // i: 0, 1, 2 - 2, 1, 0
+          // j: 2, 1, 0 - 0, 1, 2
+
+          // [1,0,0] -> 0,2 table[0][2] = 0
+          // [0,2,0] -> 1,1 table[1][1] = 2
+          // [1,0,0] -> 2,0 table[2][0] = 1
+
+          // loop: 0, 1, 2
+          // [1,0,0] -> 0,0 table[0][0] = 1
+          // [0,2,0] -> 1,1 table[1][1] = 2
+          // [1,0,0] -> 2,2 table[2][2] = 0
+
+          // loop: 0, 1, 2
+          // [1,0,0] -> 0,0 table[0][0] = 1
+          // [0,2,0] -> 0,1 table[0][1] = 0
+          // [1,0,0] -> 0,2 table[0][2] = 0
+
+         
+           ///CARLOS code------
+         for(var i = 0;i<table[0].length;i++){ // <-- i for column
+          sum = 0
+           for(var j = 0;j<table.length;j++){ // <-- j for row
+             let value = table[j][i] //<--- value is either 0, 1, 2
+             if(checker_value == value){
+               sum += value
+             }
+           }
+
+          if (check_1 == sum) {
+              console.log(" winner check1 ")
+              return 1
+          } else if (check_2 == sum) {
+              console.log(" winner check2 ")
+              return 2
+          }
+           
+         }
+          
+          ///----------------
+
+
+
+          return 0
+
         },//checker
+          
     }
 
 })//app
